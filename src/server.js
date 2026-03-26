@@ -4,14 +4,22 @@ import { connectDB,disconnectDB } from "./config/db.js";
 
 //import routes
 import movieRoutes from "./routes/movieRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 config()
 connectDB();
-const app = express()
+const app = express();
+
+//body parsing middleware
+app.use(express.json());
+app.use(express.urlencoded({extened: true}));
+
+
 
 //api routes
 
-app.use("/movies",movieRoutes)
+app.use("/movies",movieRoutes)// adala route4s folder ekat yawana any api strat from movies/
+app.use("/auth",authRoutes)
 
 app.get('/hello',(req,res)=>{
     res.json({message:"hello world"})
@@ -22,6 +30,16 @@ const PORT =5000;
 const server = app.listen(PORT,()=>{
     console.log(`server runing on ${PORT}`)
 })
+
+
+
+
+
+
+
+
+
+
 
 
 // 1. Handle "Unhandled Rejections" (errors you forgot to catch)
