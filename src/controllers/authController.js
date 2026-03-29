@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 const register = async (req,res)=>{
 
   const body = req.body;
-  const {name,email,pasword}=req.body;
+  const {name,email,password}=req.body;
 
 
   //user exist?
@@ -38,7 +38,51 @@ const register = async (req,res)=>{
     data:{
         user:{
             id:user.id,
-            name:name
+            name:name,
+            email:email,
+        }
+    }
+
+  })
+};
+
+
+
+const login = async (req,res)=>{
+const {email,password} = req.body;
+
+
+ const user = await prisma.user.findUnique({
+    where:{email:email},
+  });
+
+
+
+
+
+  if(!user){
+    return res
+    .status(400)
+    .json({error:"invalid email or password"});
+
+  }
+
+  const ispasswordValid = await bcrypt.compare(password, user.password);
+  if(!ispasswordValid){
+    return res
+    .status(400)
+    .json({error:"invalid email or password"});
+
+  }
+
+
+
+    res.status(201).json({
+    status:"success",
+    data:{
+        userE:{
+            id:id,
+            email:email,
         }
     }
 
@@ -47,4 +91,5 @@ const register = async (req,res)=>{
 }
 
 
-export {register}
+
+export {register,login}
